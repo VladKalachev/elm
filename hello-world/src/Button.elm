@@ -1,9 +1,9 @@
 module Button exposing (..)
 
 import Browser
-import Html exposing (Html, Attribute, div, input, text)
+import Html exposing (Html, Attribute, div, button, text)
 import Html.Attributes exposing (..)
-import Html.Events exposing (onInput)
+import Html.Events exposing (onClick)
 
 -- MAIN
 
@@ -11,23 +11,23 @@ main =
   Browser.sandbox { init = init, update = update, view = view }
 
 -- MODEL
-type alias Model =
- { value: String }
+type alias Model = Int
 
 init: Model
-init =
-    { value = "" }
+init = 0
 
 
 -- UPDATE
-type Msg
-  = Change String
+type Msg =  Decrement | Increment
 
 update: Msg -> Model -> Model
 update msg model =
   case msg of
-    Change newContent ->
-      { model | value = newContent }
+    Increment -> 
+        model + 1
+
+    Decrement ->
+      model - 1
 
 -- VIEW
 view : Model -> Html Msg
@@ -35,10 +35,15 @@ view model =
     div[ ]
         [
             div [ ]
-            [ input [ placeholder "Text to reverse", value model.value, onInput Change ] []
-            , div [] [ text (model.value) ]
+                [ button [ onClick Decrement ] [ text "-" ],
+                div [] [text (String.fromInt model),
+                div [] [ 
+                    button [onClick Increment ] [ text "+"] 
+                    ]
+                ]  
             ]
         ]
+        
        
        
    
