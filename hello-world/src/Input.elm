@@ -37,6 +37,7 @@ view model =
             div [ ]
             [ input [ placeholder "Text to reverse", value model.value, onInput Change ] []
             , div [] [ text (model.value) ]
+            , input [] []
             ]
         ]
        
