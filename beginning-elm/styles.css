@@ -1,0 +1,22 @@
+.content {
+   
+}
+.content header {
+    display: block;
+    width: 100%;
+    background: #4cc2c3;
+    color: #fff;
+}
+
+.content header h1 {
+    display: inline-block;
+    padding-left: 19px;
+}
+.content header .tagline {
+    display: inline-block;
+    float: right;
+    font-size: 37px;
+    line-height: 84px;
+    padding-right: 18px;
+}
+   
