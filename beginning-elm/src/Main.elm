@@ -8,22 +8,28 @@ import String exposing (..)
 
 -- MAIN
 
-main =
-  Browser.sandbox 
-  { 
+main 
+    = Browser.sandbox 
+    { 
       init = initialModel,
       update = update, 
       view = view
-  }
+    }
 
 
 -- MODEL 
+
+type alias Results =
+     {  id: Int
+        , name: String
+        , stars: Int }
+
 type alias Model =
   { query : String,
-    results: List { id: Int, name: String, stars: Int }
+    results: List Results
   }
 
--- init: Model
+initialModel: Model
 initialModel =
     {
         query = "tutorial"
@@ -55,6 +61,12 @@ elmHubHeader =
 
 {- VIEW -}
 
+type alias Msg =
+    { operation: String
+    , data: Int
+    }
+
+view : Model -> Html Msg
 view model =
     div [ class "content"] 
             [ elmHubHeader
@@ -64,13 +76,14 @@ view model =
 
 viewSearcResult result = 
     li []
-        [  span [ class "start-count"] [ text (result.name)],
-         button [class "hidden-result", onClick {operation = "DELETE_BY_ID", data = result.id}] [ text "X"]]
+        [  span [ class "start-count"] [ text (String.fromInt result.stars)]
+        , a [ href ("https://github.com/" ++ result.name), target "_blank" ] 
+            [ text result.name ]
+        , button [class "hidden-result", onClick { operation = "DELETE_BY_ID", data = result.id }] [ text "X"]]
 
 {- UPDATE -}
 
--- update msg model 
---    = model
+update: Msg -> Model -> Model
 update msg model =
     if msg.operation == "DELETE_BY_ID" then
         { model | results = List.filter (\result -> result.id /= msg.data) model.results } 
