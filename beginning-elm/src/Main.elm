@@ -6,28 +6,19 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
 import String exposing (..)
 
--- MAIN
-
-main 
-    = Browser.sandbox 
-    { 
-      init = initialModel,
-      update = update, 
-      view = view
-    }
-
 
 -- MODEL 
 
-type alias Results =
+type alias SearcResult =
      {  id: Int
         , name: String
         , stars: Int }
 
 type alias Model =
   { query : String,
-    results: List Results
+    results: List SearcResult
   }
+
 
 initialModel: Model
 initialModel =
@@ -53,6 +44,7 @@ initialModel =
             ]
     }
 
+elmHubHeader: Html Msg 
 elmHubHeader = 
             header []
                 [ h1 [] [ text "ElmHub" ]
@@ -74,12 +66,16 @@ view model =
             ]
 
 
+viewSearcResult: SearcResult -> Html Msg
 viewSearcResult result = 
     li []
         [  span [ class "start-count"] [ text (String.fromInt result.stars)]
         , a [ href ("https://github.com/" ++ result.name), target "_blank" ] 
             [ text result.name ]
-        , button [class "hidden-result", onClick { operation = "DELETE_BY_ID", data = result.id }] [ text "X"]]
+        , button 
+            [class "hidden-result", onClick { operation = "DELETE_BY_ID", data = result.id }] 
+            [ text "X"]
+        ]
 
 {- UPDATE -}
 
@@ -90,4 +86,13 @@ update msg model =
     else 
         model
 
-        
+-- MAIN
+
+
+main =
+    Browser.sandbox 
+    { 
+      init = initialModel,
+      update = update, 
+      view = view
+    }
