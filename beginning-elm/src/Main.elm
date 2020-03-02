@@ -3,22 +3,27 @@ module Main exposing (..)
 import Browser
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (onClick)
+import Html.Events exposing (onInput, onClick)
 import String exposing (..)
 
 
 -- MODEL 
 
+type alias Model =
+  { query : String,
+    results: List SearcResult
+  }
 type alias SearcResult =
      {  id: Int
         , name: String
         , stars: Int }
 
-type alias Model =
-  { query : String,
-    results: List SearcResult
-  }
-
+-- type alias Msg =
+--     { operation: String
+--     , data: Int
+--     }
+type Msg
+    = SetQuery String | DeleteById Int
 
 initialModel: Model
 initialModel =
@@ -53,15 +58,18 @@ elmHubHeader =
 
 {- VIEW -}
 
-type alias Msg =
-    { operation: String
-    , data: Int
-    }
+
 
 view : Model -> Html Msg
 view model =
     div [ class "content"] 
             [ elmHubHeader
+                , input [ class "search-query"
+                , onInput SetQuery
+                --, defaultValue model.query 
+                ]
+                 []
+                , button [ class "search-button" ] [ text "Search"] 
                 , ul [ class "results" ] (List.map viewSearcResult model.results)
             ]
 
@@ -81,10 +89,18 @@ viewSearcResult result =
 
 update: Msg -> Model -> Model
 update msg model =
-    if msg.operation == "DELETE_BY_ID" then
-        { model | results = List.filter (\result -> result.id /= msg.data) model.results } 
-    else 
+    case msg of
+       1 ->
         model
+        -- SetQuery ->
+        --    { model | results = List.filter (\result -> result.id /= msg.data) model.results }
+        _ ->
+        model
+    
+--    if msg.operation == "DELETE_BY_ID" then
+--        { model | results = List.filter (\result -> result.id /= msg.data) model.results } 
+--    else 
+--        model
 
 -- MAIN
 
