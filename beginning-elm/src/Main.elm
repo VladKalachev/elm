@@ -4,8 +4,42 @@ import Browser
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onInput, onClick)
+import Json.Decode exposing (..)
+import Json.Decode.Pipeline exposing (..)
 import String exposing (..)
+import SimpleResponse
 
+-- import Test
+
+-- MAIN
+main =
+    Browser.sandbox 
+    { 
+      init = initialModel,
+      update = update, 
+      view = view
+    }
+
+searchResultDecoder: Decoder SearcResult
+searchResultDecoder =
+    decode SearcResult
+        |> required "id" int
+        |> required "stargazers_count" int
+        |> required "full_name" string
+
+responseDecoder: Decoder (List SearcResult)
+responseDecoder =
+    decode identity
+        |> required "items" (list searchResultDecoder)
+
+decodeResults : String -> List SearcResult
+decodeResults json =
+    case decodeString responseDecoder json of
+    Ok searcResult ->
+        searcResult
+
+    Err -> 
+        []
 
 -- MODEL 
 
@@ -13,40 +47,24 @@ type alias Model =
   { query : String
   , results: List SearcResult
   }
+
 type alias SearcResult =
      {  id: Int
+        , stars: Int
         , name: String
-        , stars: Int }
+    }
 
 -- type alias Msg =
 --     { operation: String
 --     , data: Int
 --     }
-type Msg
-    = SetQuery String | DeleteById Int
+
 
 initialModel: Model
 initialModel =
     {
         query = "tutorial"
-        , results =
-            [
-                {
-                    id = 1
-                    , name = "TheSeamau5/elm-checkerboardgrid-tutorial"
-                    , stars = 66
-                }
-                ,{
-                    id = 2
-                    , name = "TheSeamau5/elm-checkerboardgrid-tutorial"
-                    , stars = 41
-                }
-               ,{
-                    id = 3
-                    , name = "TheSeamau5/elm-checkerboardgrid-tutorial"
-                    , stars = 35
-               }
-            ]
+      , results = decodeResults SimpleResponse.json
     }
 
 elmHubHeader: Html Msg 
@@ -66,7 +84,7 @@ view model =
             [ elmHubHeader
                 , input [ class "search-query"
                 , onInput SetQuery
-                , value model.query 
+                , Html.Attributes.value model.query 
                 ]
                  []
                 , button [ class "search-button" ] [ text "Search"] 
@@ -81,33 +99,24 @@ viewSearcResult result =
         , a [ href ("https://github.com/" ++ result.name), target "_blank" ] 
             [ text result.name ]
         , button 
-            --[class "hidden-result", onClick DeleteById] 
-            []
+            [ class "hidden-result", onClick (DeleteById result.id) ]
             [ text "X"]
         ]
 
 {- UPDATE -}
+
+type Msg
+    = SetQuery String | DeleteById Int
 
 update: Msg -> Model -> Model
 update msg model =
     case msg of
         SetQuery query ->
            { model | query = query }
-        _->
-            model
+
+        DeleteById id ->
+            { model | results = List.filter (\result -> result.id /= id) model.results }
+
+        -- _->
+        --     model
     
---    if msg.operation == "DELETE_BY_ID" then
---        { model | results = List.filter (\result -> result.id /= msg.data) model.results } 
---    else 
---        model
-
--- MAIN
-
-
-main =
-    Browser.sandbox 
-    { 
-      init = initialModel,
-      update = update, 
-      view = view
-    }
