@@ -10,8 +10,8 @@ import String exposing (..)
 -- MODEL 
 
 type alias Model =
-  { query : String,
-    results: List SearcResult
+  { query : String
+  , results: List SearcResult
   }
 type alias SearcResult =
      {  id: Int
@@ -66,7 +66,7 @@ view model =
             [ elmHubHeader
                 , input [ class "search-query"
                 , onInput SetQuery
-                --, defaultValue model.query 
+                , value model.query 
                 ]
                  []
                 , button [ class "search-button" ] [ text "Search"] 
@@ -81,7 +81,8 @@ viewSearcResult result =
         , a [ href ("https://github.com/" ++ result.name), target "_blank" ] 
             [ text result.name ]
         , button 
-            [class "hidden-result", onClick { operation = "DELETE_BY_ID", data = result.id }] 
+            --[class "hidden-result", onClick DeleteById] 
+            []
             [ text "X"]
         ]
 
@@ -90,12 +91,10 @@ viewSearcResult result =
 update: Msg -> Model -> Model
 update msg model =
     case msg of
-       1 ->
-        model
-        -- SetQuery ->
-        --    { model | results = List.filter (\result -> result.id /= msg.data) model.results }
-        _ ->
-        model
+        SetQuery query ->
+           { model | query = query }
+        _->
+            model
     
 --    if msg.operation == "DELETE_BY_ID" then
 --        { model | results = List.filter (\result -> result.id /= msg.data) model.results } 
