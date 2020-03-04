@@ -7,7 +7,12 @@ import Html.Events exposing (onInput, onClick)
 import Json.Decode exposing (..)
 import Json.Decode.Pipeline exposing (..)
 import String exposing (..)
-import SimpleResponse
+import Debug exposing (log)
+-- import SimpleResponse
+import Test 
+
+-- log Test
+-- json = "[{\"id\":1,\"email\":\"test@example.com\"}]"
 
 -- import Test
 
@@ -20,26 +25,26 @@ main =
       view = view
     }
 
-searchResultDecoder: Decoder SearcResult
-searchResultDecoder =
-    decode SearcResult
-        |> required "id" int
-        |> required "stargazers_count" int
-        |> required "full_name" string
+-- searchResultDecoder: Decoder SearcResult
+-- searchResultDecoder =
+--     decode SearcResult
+--         |> required "id" int
+--         |> required "stargazers_count" int
+--         |> required "full_name" string
 
-responseDecoder: Decoder (List SearcResult)
-responseDecoder =
-    decode identity
-        |> required "items" (list searchResultDecoder)
+-- responseDecoder: Decoder (List SearcResult)
+-- responseDecoder =
+--     decode identity
+--         |> required "items" (list searchResultDecoder)
 
-decodeResults : String -> List SearcResult
-decodeResults json =
-    case decodeString responseDecoder json of
-    Ok searcResult ->
-        searcResult
+-- decodeResults : String -> List SearcResult
+-- decodeResults json =
+--     case decodeString responseDecoder json of
+--     Ok searcResult ->
+--         searcResult
 
-    Err -> 
-        []
+--     Err -> 
+--         []
 
 -- MODEL 
 
@@ -64,7 +69,7 @@ initialModel: Model
 initialModel =
     {
         query = "tutorial"
-      , results = decodeResults  [] -- SimpleResponse.json
+      , results = [] --decodeResults  [] -- SimpleResponse.json
     }
 
 elmHubHeader: Html Msg 
