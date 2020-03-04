@@ -64,7 +64,7 @@ initialModel: Model
 initialModel =
     {
         query = "tutorial"
-      , results = decodeResults SimpleResponse.json
+      , results = decodeResults  [] -- SimpleResponse.json
     }
 
 elmHubHeader: Html Msg 
