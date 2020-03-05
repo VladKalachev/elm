@@ -8,6 +8,7 @@ module HttpRequest exposing (..)
 
 import Browser
 import Html exposing (..)
+import Json.Decode exposing (Decoder, field, string)
 import Http
 
 
@@ -39,18 +40,18 @@ init _ =
   ( Loading
   , Http.get
       { url = "https://jsonplaceholder.typicode.com/todos"
-      , expect = Http.expectString GotText
+      , expect = Http.expectJson GotText gifDecoder
       }
   )
 
-
+gifDecoder : Decoder String
+gifDecoder =
+  field "data" (field "title" string)
 
 -- UPDATE
 
-
 type Msg
   = GotText (Result Http.Error String)
-
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -87,10 +88,10 @@ view model =
       text "Loading..."
 
     Success fullText ->
-      pre [] [ 
-          div [ ] [
-              ul [] (List.map viewSearcResult fullText)
-           ]
+      pre [] [ text fullText
+        --  div [ ] [
+        --      ul [] (List.map viewSearcResult fullText)
+         --  ]
       ]
          -- text fullText ]
 
