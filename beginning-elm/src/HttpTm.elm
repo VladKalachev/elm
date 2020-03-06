@@ -4,8 +4,7 @@ import Browser
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Http
-import Json.Decode exposing (Decoder, field, string, list, int )
-
+import Json.Decode exposing (Decoder, field, string, list, int, bool )
 
 type Model
     = Loading
@@ -17,7 +16,7 @@ type alias TodoResult =
       userId: Int
       , id: Int
       , title: String
-     -- , completed: Bool
+      , completed: Bool
     }
 
 view : Model -> Html Msg
@@ -52,16 +51,15 @@ getDecoder =
 
 listDecoder: Decoder TodoResult
 listDecoder =
-  Json.Decode.map3 TodoResult
+  Json.Decode.map4 TodoResult
     ( field "userId" int )
     ( field "id" int )
     ( field "title" string )
+    ( field "completed" bool)
    
-
 init : () -> ( Model, Cmd Msg )
 init _ =
     ( Loading, fetchCatImageUrl )
-
 
 type Msg
     = GotResult (Result Http.Error (List TodoResult))
@@ -79,7 +77,6 @@ update msg model =
                     ( Failure, Cmd.none )
 
 -- MAIN
-
 main =
     Browser.element
         { init = init
