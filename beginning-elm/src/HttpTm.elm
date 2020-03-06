@@ -14,10 +14,10 @@ type Model
 
 type alias TodoResult =
     { 
-    -- userId: Int
-      id: Int
+      userId: Int
+      , id: Int
       , title: String
-   --  , completed: Bool
+     -- , completed: Bool
     }
 
 view : Model -> Html Msg
@@ -52,18 +52,11 @@ getDecoder =
 
 listDecoder: Decoder TodoResult
 listDecoder =
-  Json.Decode.map2 TodoResult
+  Json.Decode.map3 TodoResult
+    ( field "userId" int )
     ( field "id" int )
     ( field "title" string )
-
-                    
-
--- getDecoder: Decoder (List TodoResult)
--- getDecoder =
---      map3 TodoResult
---         (field "id" int)
---         (field "title" string)
-
+   
 
 init : () -> ( Model, Cmd Msg )
 init _ =
@@ -74,7 +67,6 @@ type Msg
     = GotResult (Result Http.Error (List TodoResult))
 
 -- UPDATE
-
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
