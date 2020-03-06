@@ -94,11 +94,11 @@ viewSearcResult result =
 -- HTTP
 
 
-getData : Cmd Msg
+-- getData : Cmd Msg
 getData =
   Http.get
     { url = "https://jsonplaceholder.typicode.com/todos"
-    , expect = Http.expectJson GotText gitDecoder
+    , expect = Http.expectJson GotText (List TodoResult)
     }
 -- https://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=cat
 
