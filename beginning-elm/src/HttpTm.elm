@@ -4,19 +4,19 @@ import Browser
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Http
-import Json.Decode exposing (Decoder, field, string, list)
+import Json.Decode exposing (Decoder, field, string, list, int )
 
 
 type Model
     = Loading
     | Failure
-    | Success (List String)
+    | Success (List TodoResult)
 
 type alias TodoResult =
     { 
     -- userId: Int
       id: Int
-      ,title: String
+      , title: String
    --  , completed: Bool
     }
 
@@ -33,9 +33,11 @@ view model =
             div [ class "name" ] [
                  ul [ class "results" ] (List.map listData data )
             ]
-listData: String -> Html Msg
-listData result 
-    = li [] [ text result ]
+
+listData: TodoResult -> Html Msg
+listData result
+    = li [] [ div [] [text  result.title]
+        , div [] [ text (String.fromInt result.id) ] ]
 
 fetchCatImageUrl : Cmd Msg
 fetchCatImageUrl =
@@ -44,9 +46,23 @@ fetchCatImageUrl =
         , expect = Http.expectJson GotResult  getDecoder
         }
 
-getDecoder : Decoder (List String)
-getDecoder = 
-    Json.Decode.list (field "title" string)
+getDecoder : Decoder (List TodoResult)
+getDecoder =
+    Json.Decode.list listDecoder
+
+listDecoder: Decoder TodoResult
+listDecoder =
+  Json.Decode.map2 TodoResult
+    ( field "id" int )
+    ( field "title" string )
+
+                    
+
+-- getDecoder: Decoder (List TodoResult)
+-- getDecoder =
+--      map3 TodoResult
+--         (field "id" int)
+--         (field "title" string)
 
 
 init : () -> ( Model, Cmd Msg )
@@ -55,7 +71,7 @@ init _ =
 
 
 type Msg
-    = GotResult (Result Http.Error (List String))
+    = GotResult (Result Http.Error (List TodoResult))
 
 -- UPDATE
 
