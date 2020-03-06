@@ -11,10 +11,7 @@ import Html exposing (..)
 import Json.Decode exposing (Decoder, field, string)
 import Http
 
-
-
 -- MAIN
-
 
 main =
   Browser.element
@@ -24,29 +21,27 @@ main =
     , view = view
     }
 
-
-
 -- MODEL
-
 
 type Model
   = Failure
   | Loading
   | Success String
 
+type alias TodoResult =
+    {  userId: Int
+     , id: Int
+     , title: String
+     , completed: Bool
+    }
+
 
 init : () -> (Model, Cmd Msg)
 init _ =
   ( Loading
-  , Http.get
-      { url = "https://jsonplaceholder.typicode.com/todos"
-      , expect = Http.expectJson GotText gifDecoder
-      }
+  , getData
   )
 
-gifDecoder : Decoder String
-gifDecoder =
-  field "data" (field "title" string)
 
 -- UPDATE
 
@@ -64,19 +59,14 @@ update msg model =
         Err _ ->
           (Failure, Cmd.none)
 
-
-
 -- SUBSCRIPTIONS
-
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
   Sub.none
 
 
-
 -- VIEW
-
 
 view : Model -> Html Msg
 view model =
@@ -98,5 +88,25 @@ view model =
 viewSearcResult result = 
     li []
         [  
-            span [ ] [ text result.title ] 
+            span [ ] [ text result ] 
         ]
+
+-- HTTP
+
+
+getData : Cmd Msg
+getData =
+  Http.get
+    { url = "https://jsonplaceholder.typicode.com/todos"
+    , expect = Http.expectJson GotText gitDecoder
+    }
+-- https://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=cat
+
+gitDecoder : Decoder (List TodoResult)
+gitDecoder =
+  field "data" (field "title" string)
+
+--   Http.get
+--       { url = "https://jsonplaceholder.typicode.com/todos"
+--       , expect = Http.expectJson GotText (list string)-- gifDecoder
+--       }
