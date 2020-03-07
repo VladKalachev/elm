@@ -36,7 +36,9 @@ view model =
 listData: TodoResult -> Html Msg
 listData result
     = li [] [ div [] [text  result.title]
-        , div [] [ text (String.fromInt result.id) ] ]
+        , div [] [ text (String.fromInt result.id) ]
+        , div [] [ text  (String.fromInt result.userId) ] 
+        ]
 
 fetchCatImageUrl : Cmd Msg
 fetchCatImageUrl =
