@@ -1,13 +1,13 @@
 import React from 'react';
 import './App.css';
 import Elm from 'react-elm-components';
-import { Main } from './elm/Main'
+import MyElmComponent from './Main.elm';
 
 function App() {
   return (
     <div className="App">
      Hello World
-     <Elm src={Main} />
+     <Elm src={MyElmComponent.Elm.Main} />
     </div>
   );
 }
