@@ -50,6 +50,9 @@ view model =
                  , placeholder "Search for a runner..."
                 ]
                 []
+            , hr [] []
+            , h4 [] [ text "Leaderboard Model:" ]
+          --  , p [] [ text <| toString model ] 
         ]
 
 main : Program () Model Msg
