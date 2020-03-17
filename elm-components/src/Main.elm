@@ -12,7 +12,7 @@ import LeaderBoard
 type alias Model =
     {
         page : Page
-        , leaderBoard :LeaderBoard.Model
+        , leaderBoard : LeaderBoard.Model
         , login: Login.Model
     }
 
@@ -39,7 +39,8 @@ update : Msg -> Model -> Model
 update msg model =
     case msg of 
         ChangePage page ->
-         { model | page = page }
+         { model 
+            | page = page }
         
         LeaderBoardMsg lbMsg ->
          { model 
