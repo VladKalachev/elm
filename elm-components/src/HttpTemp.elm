@@ -37,8 +37,8 @@ fetchCatImageUrl =
 
 
    
-init : ( Model, Cmd Msg )
-init =
+init : () -> ( Model, Cmd Msg )
+init _ =
     ( Loading, fetchCatImageUrl )
 
 type Msg
