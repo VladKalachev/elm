@@ -3,7 +3,7 @@ module Begine exposing (..)
 import Browser
 import Html exposing (..)
 import Html.Events exposing (onClick, onInput)
-import String exposing (fromInt)
+import String exposing (fromInt, toInt)
 import Debug exposing (log)
 
 type alias Model =
@@ -33,8 +33,19 @@ view model =
             , div [] []
             , input [ onInput ChangedAddText ] []
             , button [ onClick Add ] [ text "Add" ]
-            , div [] [ text model.firstName ]
+           -- , div [] [ text (fromInt model.numberAdd) ]
         ]
+        
+purseUserNumber : String -> Int 
+purseUserNumber text =
+        let
+           theMeby = toInt text
+        in 
+            case theMeby of
+               Just val ->
+                    val
+               Nothing ->
+                    0
 
 -- UPDATE
 update : Messages -> Model -> Model
@@ -45,12 +56,14 @@ update msg model =
     in
      case msg of 
        Add -> 
-           { model | value = 70 }
+           { model | value = model.value + model.numberAdd }
        ChangedAddText theText -> 
             let
                 log3 = log "theText" theText
             in
-           { model | firstName = theText }
+                { model | numberAdd = purseUserNumber theText }
+          -- { model | firstName = theText }
+
        
 
 
