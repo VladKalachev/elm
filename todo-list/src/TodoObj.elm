@@ -1,4 +1,4 @@
-module Main exposing (..)
+module TodoObj exposing (..)
 
 {- Example of writing a simple todo list -}
 import Browser
@@ -17,14 +17,23 @@ main =
         }
 
 -- MODEL
+type alias Todo = 
+    { id: Int
+    , value: String }
+
 type alias Model =
     { value: String
-     , list: List String }
+     , list: List Todo }
 
 init: Model 
 init = 
     { value = "List"
-    , list = ["Todo 1"] }
+    , list = [
+        {
+            id = 1,
+            value = "Test"
+        }
+    ] }
 
 -- VIEW
 view : Model -> Html Message
@@ -37,13 +46,14 @@ view model =
             , button [ onClick Add ] [ text "add" ] 
         ] 
 
-viewResult: String -> Html Message
-viewResult name =
-    li [ ] [ text name ]
+-- viewResult: String -> Html Message
+viewResult result =
+    li [ ] [ text result.value ]
 
 type Message = 
     Add
     | InputText String
+    | DelteElemet Int
 
 -- UPDATE
 update : Message -> Model -> Model
@@ -54,6 +64,13 @@ update msg model =
     in
     case msg of
             Add ->
-                { model | list =  model.value::model.list }
+              { model | list = { 
+                  id = List.length model.list + 1, value = model.value
+                }::model.list }
+
             InputText inputText ->
                 { model | value = inputText }
+
+            DelteElemet id ->
+                model
+            
