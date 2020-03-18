@@ -5,6 +5,7 @@ import Browser
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput)
+import String exposing (fromInt, toInt)
 import Debug exposing (log)
 import List exposing (..)
 
@@ -27,7 +28,7 @@ type alias Model =
 
 init: Model 
 init = 
-    { value = "List"
+    { value = ""
     , list = [
         {
             id = 1,
@@ -40,15 +41,26 @@ view : Model -> Html Message
 view model =
         div [ class "wrapper", style "color" "red" ] [ 
             div [] [ text "TODO list"]
-            ,ul [ class "results" ] (List.map viewResult model.list)
+            ,ul [ class "results" ] (List.map viewResult model.list )
             ,div [] []
-            , input [ onInput InputText ] []
+            , input [ onInput InputText, value model.value ] []
             , button [ onClick Add ] [ text "add" ] 
         ] 
 
 -- viewResult: String -> Html Message
 viewResult result =
-    li [ ] [ text result.value ]
+    li [ ] [
+      div [] [
+        text (fromInt result.id)
+        , text " - "
+        , text result.value
+        , span [ 
+            style "cursor" "pointer", 
+            style "color" "#000",
+            onClick (DelteElemet result.id)
+         ] [ text " X" ]
+     ]
+      ]
 
 type Message = 
     Add
@@ -64,13 +76,23 @@ update msg model =
     in
     case msg of
             Add ->
-              { model | list = { 
-                  id = List.length model.list + 1, value = model.value
-                }::model.list }
+                let
+                  
+                    adding = { 
+                        id = List.length model.list + 1, value = model.value
+                        }::model.list  
+                    data = List.sortBy .id adding
+                    log4 = log "model.adding" adding
+                    -- |> List.reverse model.list 
+                in
+                    { model | list = data, value = "" }
 
             InputText inputText ->
-                { model | value = inputText }
+                { model | value = inputText  }
 
             DelteElemet id ->
-                model
+                let
+                    log3 = log "id" id
+                in
+                    { model | list = List.filter (\result -> result.id /= id) model.list }
             
